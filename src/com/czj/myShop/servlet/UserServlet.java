@@ -5,9 +5,11 @@ import com.czj.myShop.entity.User;
 import org.apache.commons.beanutils.BeanUtils;
 
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.List;
@@ -56,21 +58,50 @@ public class UserServlet extends BaseServlet {
 
         userDaoImpl.queryUsertById(id);
 
-       // response.sendRedirect("UserServlet?method=queryAllUsers");
     }
 
     public void login(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        User result = userDaoImpl.queryUsertByNameAndPwd(username,password);
-        if(result != null){
+        User user = userDaoImpl.queryUsertByNameAndPwd(username,password);
+        if(user != null){
+            request.getSession().setAttribute("username",user.getUsername());
+            request.getSession().setAttribute("password",user.getPassword());
+            response.addCookie(new Cookie("username",username));
+            response.addCookie(new Cookie("password",password));
+            request.getSession().setMaxInactiveInterval(60*30);
+
             response.sendRedirect("main.jsp");
         }else{
             response.sendRedirect("index.jsp");
         }
 
-        // response.sendRedirect("UserServlet?method=queryAllUsers");
+    }
+
+
+    public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
+        String username = request.getParameter("username");
+        request.getSession().setAttribute("username",null);
+        response.sendRedirect("index.jsp");
+
+    }
+
+
+
+    public void checkPassword(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
+        //
+        String pwd1 = request.getParameter("pwd1");
+        String pwd2 = request.getParameter("pwd2");
+        String result = "";
+        if (!(pwd1.equals(pwd2))) {
+            result = "两次输入不一致";
+        }
+
+        PrintWriter writer = response.getWriter();
+        writer.print(result);
+        writer.flush();
+        writer.close();
     }
 
     public void updateyUser(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {

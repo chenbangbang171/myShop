@@ -11,6 +11,10 @@
     <title>Title</title>
 </head>
 <body>
-要买小米儿不？
+<%
+    String username = (String)session.getAttribute("username");
+%>
+<%= username%>,要买小米儿不？
+<a href="UserServlet?method=logout&username=<%=username%>">注销</a>
 </body>
 </html>
