@@ -32,7 +32,6 @@
             });
         });
 
-
         function reloadCheckImg() {
             //每次单击验证码图片，重新请求验证码；
             $("img").attr("src", "checkCode.jsp?t=" + (new Date().getTime()));
@@ -46,7 +45,7 @@
                 var $checkCode = $("#checkCodeId").val();
                 //ajax 的post请求
                 $.post(
-                    "CheckCodeServlet",//请求的地址
+                    "UserServlet?method=checkCode",//请求的地址
                     "checkCode=" + $checkCode,//请求的数据
                     function (result) {
                         //获取到返回的result值
@@ -66,12 +65,34 @@
 
             });
         });
+
+        $(document).ready(function () {
+            $("#checkEmail").blur(function () {
+                //获取用户输入的值
+                var email = $("#checkEmail").val();
+                //ajax 的post请求
+                $.post(
+                    "UserServlet?method=queryUserByEmail",//请求的地址
+                    "checkEmail=" + email,//请求的数据
+                    function (result) {
+                        //将span内容填充
+                        $("#checkem").html(result);
+                        if (result != ""){
+                            $("#submit").attr("disabled",true);
+                        }
+                    }
+                );
+
+            });
+        });
+
+
     </script>
 
 
 </head>
 <body>
-<form action="UserServlet?method=addUser" method="post">
+<form action="UserServlet?method=regist" method="post">
     <table width="500px" border="1px" align="center">
 
         <tr>
@@ -91,24 +112,17 @@
         </tr>
         <tr>
             <td>用户邮箱</td>
-            <td><input type="text" name="email"></td>
+            <td>
+                <input type="text" name="email" id="checkEmail">
+                <span id="checkem" style=" width: 40px"></span>
+            </td>
+
         </tr>
         <tr>
             <td>用户性别</td>
             <td><input type="text" name="gender"></td>
         </tr>
-        <tr>
-            <td>用户状态</td>
-            <td><input type="text" name="flag"></td>
-        </tr>
-        <tr>
-            <td>用户类型</td>
-            <td><input type="text" name="role"></td>
-        </tr>
-        <tr>
-            <td>激活码</td>
-            <td><input type="text" name="code"></td>
-        </tr>
+
         <tr>
             <td>验证码</td>
             <td style="text-align: center;line-height: 10px">

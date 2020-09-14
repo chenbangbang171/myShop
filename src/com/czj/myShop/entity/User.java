@@ -35,6 +35,14 @@ public class User {
         this.role = role;
         this.code = code;
     }
+    public User( String username, String password, String email, String gender, int flag, int role) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.gender = gender;
+        this.flag = flag;
+        this.role = role;
+    }
 
     public int getId() {
         return id;
@@ -89,7 +97,7 @@ public class User {
     }
 
     public void setRole(int role) {
-        this.role = role;
+        this.role = 1;
     }
 
     public String getCode() {
