@@ -108,7 +108,6 @@
         });
     </script>
     <style type="text/css">
-
         table {
             width: 800px;
             border: 1px solid black;
@@ -122,6 +121,9 @@
         th {
             width: 80px;
             border: 1px solid black;
+        }
+        a{
+            text-decoration: none;
         }
     </style>
     <title>Title</title>

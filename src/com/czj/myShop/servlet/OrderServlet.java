@@ -105,6 +105,14 @@ public class OrderServlet extends BaseServlet {
         request.getRequestDispatcher("afterOrder.jsp").forward(request, response);
     }
 
+    /**
+     * 查询当前订单，不包括历史订单
+     * @param request
+     * @param response
+     * @throws SQLException
+     * @throws ServletException
+     * @throws IOException
+     */
     public void queryCurrentOrders(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         int userId = (int) request.getSession().getAttribute("userid");
 
@@ -114,42 +122,6 @@ public class OrderServlet extends BaseServlet {
         request.getRequestDispatcher("myCurrentOrders.jsp").forward(request,response);
     }
 
-
-//    public void createOrder(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
-//        Random random = new Random();
-//        int i = random.nextInt(10000);
-//        String orderId = String.valueOf(i) + String.valueOf(System.currentTimeMillis());
-//
-//        int userid = (int) request.getSession().getAttribute("userid");
-//        int goodsid = Integer.parseInt(request.getParameter("goodsId"));
-//        System.out.println(goodsid);
-//        int goodsNumber = Integer.parseInt(request.getParameter("goodsNumber"));
-//        double goodsPrice = Double.parseDouble(request.getParameter("goodsPrice"));
-//        double totalPrice = Double.parseDouble(request.getParameter("totalPrice"));
-//        //订单初始状态为0，未支付
-//        int status = 0;
-//        //当前时间
-//        SimpleDateFormat s = new SimpleDateFormat("yyy-MM-dd hh:mm:ss");
-//        String date = s.format(new Date());
-//
-//        //获取收货人地址id
-//        Address address = addressDaoImpl.queryAddressByUserId(userid);
-//        int address_id = address.getAddress_id();
-//        String address_userphone = address.getAddress_userphone();
-//        String address_detail = address.getAddress_detail();
-//
-//        //组装order
-//        Order order = new Order(orderId, userid, goodsid, totalPrice, goodsPrice, status, date, address_id);
-//
-//        //插入数据库
-//        orderDaoImpl.createOrder(order);
-//
-//        //返回前端
-//        request.setAttribute("orderInfo", order);
-//        request.setAttribute("address_userphone", address_userphone);
-//        request.setAttribute("address_detail", address_detail);
-//        request.getRequestDispatcher("afterOrder.jsp").forward(request, response);
-//    }
 
 
 }

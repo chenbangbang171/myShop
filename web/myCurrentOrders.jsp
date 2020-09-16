@@ -30,6 +30,9 @@
         #back {
             float: left;
         }
+        a{
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -51,25 +54,25 @@
         <th>收件人电话</th>
     </tr>
 
-
     <%
         List<OrderDetail> orderList = (List<OrderDetail>) request.getAttribute("orderDetails");
         String status = "";
         for (OrderDetail order : orderList) {
             //订单状态：0未支付、1支付成功，等待发货、2已发货，运输中、3已到达，等待领取、4待确认收货、5待评价
             if (order.getOrder_status() == 0) {
-                 status = "未支付";
-            } else if (order.getOrder_status() == 1){
+                status = "未支付";
+            } else if (order.getOrder_status() == 1) {
                 status = "支付成功，等待发货";
-            }else if(order.getOrder_status() == 2){
+            } else if (order.getOrder_status() == 2) {
                 status = "已发货，运输中";
-            }else if(order.getOrder_status() == 3){
+            } else if (order.getOrder_status() == 3) {
                 status = "已到达，等待领取";
-            }else if(order.getOrder_status() == 4){
-                status = "待确认收货";
-            }else {
+            } else if (order.getOrder_status() == 4) {
+                status = "已领取，待确认收货";
+            } else if (order.getOrder_status() == 5) {
                 status = "待评价";
             }
+            if (order.getOrder_status() != 6) {
     %>
     <tr id="tr1">
         <th>
@@ -84,9 +87,37 @@
         <th>
             <%=order.getOrder_price()%>
         </th>
+        <%
+            if (order.getOrder_status() == 0) {
+        %>
+        <th>
+            <%=status%>
+            <button><a href="UpdateOrderServlet?method=pay&orderId=<%=order.getOrder_id()%>">点我支付</a></button>
+        </th>
+        <%
+        } else if (order.getOrder_status() == 4) {
+        %>
+        <th>
+            <%=status%>
+            <button><a href="UpdateOrderServlet?method=confirm&orderId=<%=order.getOrder_id()%>">点我确认收货</a></button>
+        </th>
+        <%
+        } else if (order.getOrder_status() == 5) {
+        %>
+        <th>
+            <%=status%>
+            <button><a href="UpdateOrderServlet?method=appraise&orderId=<%=order.getOrder_id()%>">点我评价</a></button>
+        </th>
+        <%
+        } else {
+        %>
         <th>
             <%=status%>
         </th>
+        <%
+            }
+        %>
+
         <th>
             <%=order.getOrder_time()%>
         </th>
@@ -97,8 +128,8 @@
             <%=order.getOrder_phoneNumber()%>
         </th>
     </tr>
-
     <%
+            }
         }
     %>
 </table>
