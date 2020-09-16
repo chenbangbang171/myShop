@@ -8,8 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <script type="text/javascript" src="jquery-3.3.1.js">
-    </script>
+    <script type="text/javascript" src="jquery-3.3.1.js"></script>
     <script type="text/javascript">
         function reloadCheckImg(){
                 //每次单击验证码图片，重新请求验证码；

@@ -54,6 +54,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
      * @return   User 将该用户返回
      * @throws SQLException
      */
+    @Override
     public User queryUserByEmail(String email) throws SQLException {
         String sql = "select  * from user  where email = ?";
         User user = super.queryBean(sql, User.class, email);
@@ -69,6 +70,7 @@ public class UserDaoImpl extends BaseDao implements UserDao {
      * @return
      * @throws SQLException
      */
+    @Override
     public int updateFlag(int flag, int id, String checkCode) throws SQLException {
         String sql = "update user set flag = ? , code = ? where id = ?";
         Object[] params = {flag, checkCode, id};
@@ -82,10 +84,23 @@ public class UserDaoImpl extends BaseDao implements UserDao {
      * @return
      * @throws SQLException
      */
+    @Override
     public User isActive(int id) throws SQLException {
         String sql = "select * from user where id = ? and flag = 1";
         return queryBean(sql,User.class,id);
 
+    }
+
+    /**
+     * 获取该用户的角色
+     * @param id
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public User getRole(int id) throws SQLException {
+        String sql = "select role from user where id = ? and role = 1" ;
+        return queryBean(sql,User.class,id);
     }
 
 

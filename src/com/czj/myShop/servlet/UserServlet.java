@@ -51,7 +51,8 @@ public class UserServlet extends BaseServlet {
     }
 
     /**
-     *   注册用户并发送激活邮件
+     * 注册用户并发送激活邮件
+     *
      * @param request
      * @param response
      * @throws SQLException
@@ -83,7 +84,8 @@ public class UserServlet extends BaseServlet {
     }
 
     /**
-     *  用户点击激活连接，激活账号状态
+     * 用户点击激活连接，激活账号状态
+     *
      * @param request
      * @param response
      * @throws SQLException
@@ -112,9 +114,10 @@ public class UserServlet extends BaseServlet {
     }
 
     /**
-     *   激活用户，被active()调用
-     * @param flag 激活状态码
-     * @param id    用户id
+     * 激活用户，被active()调用
+     *
+     * @param flag      激活状态码
+     * @param id        用户id
      * @param checkCode 用户激活码
      * @return
      * @throws SQLException
@@ -128,7 +131,8 @@ public class UserServlet extends BaseServlet {
     }
 
     /**
-     *   专门为active()方法服务的查询方法
+     * 专门为active()方法服务的查询方法
+     *
      * @param email 用户邮箱
      * @return
      * @throws IOException
@@ -150,7 +154,6 @@ public class UserServlet extends BaseServlet {
         int id = Integer.parseInt(request.getParameter("id"));
 
         userDaoImpl.queryUsertById(id);
-
     }
 
     public void queryUserByEmail(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
@@ -171,21 +174,36 @@ public class UserServlet extends BaseServlet {
 
     }
 
+    /**
+     *  登录方法，如果注册但是未激活，提示激活；如果普通会员则进入main.jsp；如果管理员则进入manage.jsp
+     * @param request
+     * @param response
+     * @throws IOException
+     * @throws SQLException
+     */
     public void login(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
         User user = userDaoImpl.queryUsertByNameAndPwd(username, password);
-        if (user != null ) {
-            if ( isActive(user.getId() )){
-                request.getSession().setAttribute("username", user.getUsername());
-                request.getSession().setAttribute("password", user.getPassword());
-                response.addCookie(new Cookie("username", username));
-                response.addCookie(new Cookie("password", password));
-                request.getSession().setMaxInactiveInterval(60 * 30);
+        if (user != null) {
+            if (isActive(user.getId())) {
 
-                response.sendRedirect("main.jsp");
-            }else{
+                if (getRole(user.getId())) {
+                    request.getSession().setAttribute("userid", user.getId());
+                    request.getSession().setAttribute("username", user.getUsername());
+                    request.getSession().setAttribute("password", user.getPassword());
+                    request.getSession().setAttribute("role", user.getRole());
+                    response.addCookie(new Cookie("username", username));
+                    response.addCookie(new Cookie("password", password));
+                    request.getSession().setMaxInactiveInterval(60 * 30);
+
+                    response.sendRedirect("main.jsp");
+                }else{
+                    response.sendRedirect("manage.jsp");
+                }
+
+            } else {
                 response.getWriter().write("此账号未激活，请激活后登录！");
             }
 
@@ -196,14 +214,28 @@ public class UserServlet extends BaseServlet {
     }
 
     /**
-     *  根据id查询用户的状态码,判断是否是激活状态
+     * 根据id查询用户的角色，如果查到说明是会员，查不到则是管理员
+     *
+     * @param id 用户id
+     * @return
+     * @throws IOException
+     * @throws SQLException
+     */
+    public boolean getRole(int id) throws IOException, SQLException {
+        //true代表会员，false代表管理员
+        return userDaoImpl.getRole(id) != null ? true : false;
+    }
+
+    /**
+     * 根据id查询用户的状态码,判断是否是激活状态
+     *
      * @param id
      * @return
      * @throws IOException
      * @throws SQLException
      */
     public boolean isActive(int id) throws IOException, SQLException {
-      return userDaoImpl.isActive(id) != null ? true: false;
+        return userDaoImpl.isActive(id) != null ? true : false;
     }
 
     public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
@@ -266,9 +298,7 @@ public class UserServlet extends BaseServlet {
     }
 
     public void queryAllUsers(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
-
         List<User> list = userDaoImpl.queryAllUsers();
-
 
         response.sendRedirect("showUsers.jsp");
     }

@@ -88,8 +88,6 @@
 
 
     </script>
-
-
 </head>
 <body>
 <form action="UserServlet?method=regist" method="post">
