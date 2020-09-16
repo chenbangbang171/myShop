@@ -1,10 +1,11 @@
 package com.czj.myShop.entity;
 
 public class Order {
-    private int order_id;
+    private String order_id;
     private  int order_userid;
     private  int order_goodsid;
     private double order_price;
+    private double order_goodsprice;
     private  int order_status;
     private  String order_time;
     private int order_addressid;
@@ -12,14 +13,34 @@ public class Order {
     public Order() {
     }
 
-    public Order(int order_id, int order_userid, int order_goodsid, double order_price, int order_status, String order_time, int order_addressid) {
+    public Order(String order_id, int order_userid, int order_goodsid, double order_price, double order_goodsprice, int order_status, String order_time, int order_addressid) {
         this.order_id = order_id;
         this.order_userid = order_userid;
         this.order_goodsid = order_goodsid;
         this.order_price = order_price;
+        this.order_goodsprice = order_goodsprice;
         this.order_status = order_status;
         this.order_time = order_time;
         this.order_addressid = order_addressid;
+    }
+
+    public Order(int order_userid, int order_goodsid, double order_price, double goods_price, int order_status, String order_time, int order_addressid) {
+        this.order_userid = order_userid;
+        this.order_goodsid = order_goodsid;
+        this.order_price = order_price;
+        this.order_goodsprice = goods_price;
+        this.order_status = order_status;
+        this.order_time = order_time;
+        this.order_addressid = order_addressid;
+    }
+
+
+    public double getOrder_goodsprice() {
+        return order_goodsprice;
+    }
+
+    public void setOrder_goodsprice(double order_goodsprice) {
+        this.order_goodsprice = order_goodsprice;
     }
 
     public int getOrder_goodsid() {
@@ -30,11 +51,11 @@ public class Order {
         this.order_goodsid = order_goodsid;
     }
 
-    public int getOrder_id() {
+    public String getOrder_id() {
         return order_id;
     }
 
-    public void setOrder_id(int order_id) {
+    public void setOrder_id(String order_id) {
         this.order_id = order_id;
     }
 

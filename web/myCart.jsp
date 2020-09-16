@@ -11,24 +11,28 @@
 <head>
     <script type="text/javascript" src="jquery-3.3.1.js"></script>
     <script type="text/javascript">
-        function goodsNumDown(e) {
+        function createOrder(e) {
+                var re = $(e);
             $.ajax({
-                url: "CartServlet?method=goodsNumberDown",
+                url: "OrderServlet?method=createOrder",
                 data: {
-                    "goodsId": e.getAttribute("goodsId"),
-                    "goodsPrice": e.getAttribute("goodsPrice"),
-                    "goodsNumber": e.getAttribute("goodsNumber"),
-                    "totalPrice": e.getAttribute("totalPrice")
+                    "goodsId": re.attr("goodsId"),
+                    "goodsPrice": re.attr("goodsPrice"),
+                    "goodsNumber": re.attr("goodsNumber"),
+                    "totalPrice": re.attr("totalPrice")
                 },
                 type: "post",
                 dataType: "json",
                 success: function (result) {
-                    $("#goodsNumber").html(result.goodsNumber);
-                    $("#totalPrice").html(result.totalPrice);
-                    alert(222);
+
+                    var order = eval(result.order);
+                    alert("下单成功！点击确定查看订单详情");
+                    location.href = "OrderServlet?method=orderDetail&orderId="+order.order_id;
+
                 },
-                error: function () {
-                    alert("添加失败！");
+                error: function (result) {
+                    alert("下单失败了！");
+
                 }
             });
         }
@@ -102,7 +106,9 @@
             </button>
         </th>
         <th>
-            <button><a href="OrderServlet?method=createOrder&goodsId=<%=cart.getGoodsId()%>&goodsPrice=<%=cart.getGoodsPrice()%>&goodsNumber=<%=cart.getGoodsNumber()%>&totalPrice=<%=cart.getTotalPrice()%>">点击下单</a></button>
+            <button>
+                <a onclick="createOrder(this)" goodsId="<%=cart.getGoodsId()%>" goodsPrice="<%=cart.getGoodsPrice()%>" goodsNumber="<%=cart.getGoodsNumber()%>" totalPrice="<%=cart.getTotalPrice()%>">点击下单</a>
+            </button>
         </th>
     </tr>
 
