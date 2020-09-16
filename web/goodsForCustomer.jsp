@@ -102,15 +102,8 @@
 
             });
 
-            // $("#manageMyCart").on("click", function () {
-            //     $.post(
-            //         "CartServlet?method=manageMyCart",
-            //         {},
-            //         function (result) {
-            //
-            //         }
-            //     );
-            // });
+
+
 
         });
     </script>
@@ -137,9 +130,13 @@
 <%
     String username = (String) session.getAttribute("username");
 %>
-<a href=""><%= username %>
+<a style="text-decoration: none">
+    <%=username%>宝贝您来啦？！！
 </a>
-
+<button>
+    <a href="UserServlet?method=logout&username=<%=username%>">点我注销哦亲爱的&nbsp;<%=username%></a>
+</button>
+<br>
 <!--输入商品id进行检索-->
 检索商品:<input type="text" placeholder="请输入商品编号..." name="goods_id" id="goods_id">
 <button id="searching">检索</button>
@@ -174,6 +171,7 @@
 <button id="myCart">我的购物车</button>
 <button id="hideMyCart">收起购物车</button>
 <button id="manageMyCart"><a href="CartServlet?method=manageMyCart">管理我的购物车</a></button>
+<button id="myOrders"><a href="OrderServlet?method=queryCurrentOrders">我的订单</a></button>
 <!--购物车，该列表默认不出现，点击我的购物车按钮显示，-->
 <table style="display:none" id="cartTable" flag="0">
     <tr id="tr1">

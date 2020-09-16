@@ -3,8 +3,15 @@ package com.czj.myShop.dao;
 import com.czj.myShop.entity.Order;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class OrderDaoImpl extends BaseDao implements OrderDao {
+
+    public List<Order> queryCurrentOrders(int userId) throws SQLException {
+        String sql = "select * from orders where order_userid = " + userId;
+
+        return super.queryBeanList(sql,Order.class);
+    }
 
     public void createOrder(Order order) throws SQLException {
         String sql = "insert into orders values(?,?,?,?,?,?,?,?)";

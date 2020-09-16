@@ -72,6 +72,7 @@
         <th>下单</th>
     </tr>
     <%
+        String username = (String)request.getSession().getAttribute("username");
         List<ShowCart> allCarts = (List<ShowCart>) request.getAttribute("allCarts");
         for (ShowCart cart : allCarts) {//遍历商品集合
     %>
@@ -115,6 +116,10 @@
     <%
         }
     %>
+
+    <button>
+        <a href="UserServlet?method=logout&username=<%=username%>">点我注销哦亲爱的&nbsp;<%=username%></a>
+    </button><br>
     <button id="back"><a href="GoodsServlet?method=qureyAllGoods">返回首页</a></button>
     <button><a href="CartServlet?method=clearCart">清空购物车</a></button>
 </table>

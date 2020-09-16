@@ -1,71 +1,100 @@
 package com.czj.myShop.entity;
 
 public class OrderDetail {
-    private int orderdetail_id;
-    private  int orderdetail_goodsid;
-    private  String orderdetail_orderid;
-    private  int orderdetail_goodsnum;
-    private  double orderdetail_orderprice;
+    private String order_id;
+    private int order_userId;
+    private String order_userName;
+    private double order_goodsPrice;
+    private double order_price;
+    private  int order_status;
+    private  String order_time;
+    private String order_address;
+    private String order_phoneNumber;
 
     public OrderDetail() {
     }
 
-    public OrderDetail(int orderdetail_id, int orderdetail_goodsid, String orderdetail_orderid, int orderdetail_goodsnum, double orderdetail_orderprice) {
-        this.orderdetail_id = orderdetail_id;
-        this.orderdetail_goodsid = orderdetail_goodsid;
-        this.orderdetail_orderid = orderdetail_orderid;
-        this.orderdetail_goodsnum = orderdetail_goodsnum;
-        this.orderdetail_orderprice = orderdetail_orderprice;
+    public OrderDetail(String order_id, int order_userId, String order_userName, double order_goodsPrice, double order_price, int order_status, String order_time, String order_address, String order_phoneNumber) {
+        this.order_id = order_id;
+        this.order_userId = order_userId;
+        this.order_userName = order_userName;
+        this.order_goodsPrice = order_goodsPrice;
+        this.order_price = order_price;
+        this.order_status = order_status;
+        this.order_time = order_time;
+        this.order_address = order_address;
+        this.order_phoneNumber = order_phoneNumber;
     }
 
-    public int getOrderdetail_id() {
-        return orderdetail_id;
+    public int getOrder_userId() {
+        return order_userId;
     }
 
-    public void setOrderdetail_id(int orderdetail_id) {
-        this.orderdetail_id = orderdetail_id;
+    public void setOrder_userId(int order_userId) {
+        this.order_userId = order_userId;
     }
 
-    public int getOrderdetail_goodsid() {
-        return orderdetail_goodsid;
+    public String getOrder_id() {
+        return order_id;
     }
 
-    public void setOrderdetail_goodsid(int orderdetail_goodsid) {
-        this.orderdetail_goodsid = orderdetail_goodsid;
+    public void setOrder_id(String order_id) {
+        this.order_id = order_id;
     }
 
-    public String getOrderdetail_orderid() {
-        return orderdetail_orderid;
+    public String getOrder_userName() {
+        return order_userName;
     }
 
-    public void setOrderdetail_orderid(String orderdetail_orderid) {
-        this.orderdetail_orderid = orderdetail_orderid;
+    public void setOrder_userName(String order_userName) {
+        this.order_userName = order_userName;
     }
 
-    public int getOrderdetail_goodsnum() {
-        return orderdetail_goodsnum;
+    public double getOrder_goodsPrice() {
+        return order_goodsPrice;
     }
 
-    public void setOrderdetail_goodsnum(int orderdetail_goodsnum) {
-        this.orderdetail_goodsnum = orderdetail_goodsnum;
+    public void setOrder_goodsPrice(double order_goodsPrice) {
+        this.order_goodsPrice = order_goodsPrice;
     }
 
-    public double getOrderdetail_orderprice() {
-        return orderdetail_orderprice;
+    public double getOrder_price() {
+        return order_price;
     }
 
-    public void setOrderdetail_orderprice(double orderdetail_orderprice) {
-        this.orderdetail_orderprice = orderdetail_orderprice;
+    public void setOrder_price(double order_price) {
+        this.order_price = order_price;
     }
 
-    @Override
-    public String toString() {
-        return "OrderDetail{" +
-                "orderdetail_id=" + orderdetail_id +
-                ", orderdetail_goodsid=" + orderdetail_goodsid +
-                ", orderdetail_orderid='" + orderdetail_orderid + '\'' +
-                ", orderdetail_goodsnum=" + orderdetail_goodsnum +
-                ", orderdetail_orderprice=" + orderdetail_orderprice +
-                '}';
+    public int getOrder_status() {
+        return order_status;
+    }
+
+    public void setOrder_status(int order_status) {
+        this.order_status = order_status;
+    }
+
+    public String getOrder_time() {
+        return order_time;
+    }
+
+    public void setOrder_time(String order_time) {
+        this.order_time = order_time;
+    }
+
+    public String getOrder_address() {
+        return order_address;
+    }
+
+    public void setOrder_address(String order_address) {
+        this.order_address = order_address;
+    }
+
+    public String getOrder_phoneNumber() {
+        return order_phoneNumber;
+    }
+
+    public void setOrder_phoneNumber(String order_phoneNumber) {
+        this.order_phoneNumber = order_phoneNumber;
     }
 }

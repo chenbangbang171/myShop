@@ -2,9 +2,11 @@ package com.czj.myShop.servlet;
 
 import com.czj.myShop.dao.AddressDaoImpl;
 import com.czj.myShop.dao.OrderDaoImpl;
+import com.czj.myShop.dao.OrderDetailDaoImpl;
 import com.czj.myShop.dao.UserDaoImpl;
 import com.czj.myShop.entity.Address;
 import com.czj.myShop.entity.Order;
+import com.czj.myShop.entity.OrderDetail;
 import com.czj.myShop.entity.User;
 import net.sf.json.JSON;
 import net.sf.json.JSONObject;
@@ -18,7 +20,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 @WebServlet("/OrderServlet")
@@ -26,9 +30,11 @@ public class OrderServlet extends BaseServlet {
     private OrderDaoImpl orderDaoImpl = new OrderDaoImpl();
     private UserDaoImpl userDaoImpl = new UserDaoImpl();
     private AddressDaoImpl addressDaoImpl = new AddressDaoImpl();
+    private OrderDetailDaoImpl orderDetailDaoImpl = new OrderDetailDaoImpl();
 
     /**
      * 用户点击下单后进入，将订单返回前端，用户点击确定后进入订单详情
+     *
      * @param request
      * @param response
      * @throws SQLException
@@ -42,6 +48,7 @@ public class OrderServlet extends BaseServlet {
 
         int userid = (int) request.getSession().getAttribute("userid");
         int goodsid = Integer.parseInt(request.getParameter("goodsId"));
+        String order_userName = (String)request.getSession().getAttribute("username");
         int goodsNumber = Integer.parseInt(request.getParameter("goodsNumber"));
         double goodsPrice = Double.parseDouble(request.getParameter("goodsPrice"));
         double totalPrice = Double.parseDouble(request.getParameter("totalPrice"));
@@ -60,12 +67,16 @@ public class OrderServlet extends BaseServlet {
         //组装order
         Order order = new Order(orderId, userid, goodsid, totalPrice, goodsPrice, status, date, address_id);
 
+        //组装orderDetail
+        OrderDetail orderDetail = new OrderDetail(orderId,userid,order_userName,goodsPrice,totalPrice,status,date,address_detail,address_userphone);
+        orderDetailDaoImpl.insertOrderDeatil(orderDetail);
+
         //插入数据库
         orderDaoImpl.createOrder(order);
 
         PrintWriter writer = response.getWriter();
         JSONObject json = new JSONObject();
-        json.put("order",order);
+        json.put("order", order);
         writer.print(json);
         writer.flush();
         writer.close();
@@ -80,12 +91,11 @@ public class OrderServlet extends BaseServlet {
     public void orderDetail(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         String orderId = request.getParameter("orderId");
 
-        int userId = (int)request.getSession().getAttribute("userid");
+        int userId = (int) request.getSession().getAttribute("userid");
 
         Order order = orderDaoImpl.queryOrder(userId, orderId);
 
         Address address = addressDaoImpl.queryAddressByUserId(userId);
-        int address_id = address.getAddress_id();
         String address_userphone = address.getAddress_userphone();
         String address_detail = address.getAddress_detail();
 
@@ -95,6 +105,14 @@ public class OrderServlet extends BaseServlet {
         request.getRequestDispatcher("afterOrder.jsp").forward(request, response);
     }
 
+    public void queryCurrentOrders(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+        int userId = (int) request.getSession().getAttribute("userid");
+
+        List<OrderDetail> orderDetails = orderDetailDaoImpl.queryAllOrderDetails(userId);
+
+        request.setAttribute("orderDetails",orderDetails);
+        request.getRequestDispatcher("myCurrentOrders.jsp").forward(request,response);
+    }
 
 
 //    public void createOrder(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
