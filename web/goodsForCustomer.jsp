@@ -125,16 +125,29 @@
         a{
             text-decoration: none;
         }
+        a:visited {
+            text-decoration: none;
+        }
+        a:active {
+            text-decoration: none;
+        }
     </style>
     <title>Title</title>
 </head>
 <body>
 <%
     String username = (String) session.getAttribute("username");
+    if (null == username) {
 %>
-<a style="text-decoration: none">
-    <%=username%>宝贝您来啦？！！
-</a>
+<a href="regist.jsp">点我注册哦亲！~</a>
+<%
+} else {
+%>
+<%=username%>宝贝您来啦？！！
+<%
+    }
+%>
+
 <button>
     <a href="UserServlet?method=logout&username=<%=username%>">点我注销哦亲爱的&nbsp;<%=username%></a>
 </button>
@@ -174,6 +187,7 @@
 <button id="hideMyCart">收起购物车</button>
 <button id="manageMyCart"><a href="CartServlet?method=manageMyCart">管理我的购物车</a></button>
 <button id="myOrders"><a href="OrderServlet?method=queryCurrentOrders">我的订单</a></button>
+<button id="myOrders"><a href="OrderServlet?method=queryAllOrders">我的全部订单</a></button>
 <!--购物车，该列表默认不出现，点击我的购物车按钮显示，-->
 <table style="display:none" id="cartTable" flag="0">
     <tr id="tr1">

@@ -97,7 +97,7 @@ public class User {
     }
 
     public void setRole(int role) {
-        this.role = 1;
+        this.role = role;
     }
 
     public String getCode() {

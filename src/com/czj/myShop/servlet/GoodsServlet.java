@@ -1,6 +1,7 @@
 package com.czj.myShop.servlet;
 
 import com.czj.myShop.dao.GoodsDaoImpl;
+import com.czj.myShop.dao.UserDaoImpl;
 import com.czj.myShop.entity.Goods;
 import com.czj.myShop.entity.User;
 import net.sf.json.JSONObject;
@@ -21,6 +22,7 @@ import java.util.Map;
 @WebServlet("/GoodsServlet")
 public class GoodsServlet extends BaseServlet {
     private GoodsDaoImpl goodsDaoImpl = new GoodsDaoImpl();
+    private UserDaoImpl userDaoImpl = new UserDaoImpl();
 
     public void addGoods(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException, ClassNotFoundException {
         Map<String, String[]> parameterMap = request.getParameterMap();
@@ -38,16 +40,23 @@ public class GoodsServlet extends BaseServlet {
     }
 
     public void qureyAllGoods(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException, IOException, ServletException {
-        List<Goods> goodsList= goodsDaoImpl.queryAllGoods();
-       int role =  (int) request.getSession().getAttribute("role");
-        if(role == 1){
+        List<Goods> goodsList = goodsDaoImpl.queryAllGoods();
+        int userid = (int)request.getSession().getAttribute("userid");
+        User role = userDaoImpl.getRole(userid,1);
+
+        //try{
+        if (null != role) {
             request.setAttribute("goodsList", goodsList);
             request.getRequestDispatcher("goodsForCustomer.jsp").forward(request, response);
 
-        }else{
+        } else {
             request.setAttribute("goodsList", goodsList);
-            request.getRequestDispatcher("manageGoods.jsp").forward(request, response);
+            request.getRequestDispatcher("showGoods.jsp").forward(request, response);
         }
+//        }catch (Exception e){
+//            request.setAttribute("goodsList", goodsList);
+//            request.getRequestDispatcher("goodsForCustomer.jsp").forward(request, response);
+//        }
 
     }
 
@@ -68,12 +77,11 @@ public class GoodsServlet extends BaseServlet {
         JSONObject json = new JSONObject();
         PrintWriter writer = response.getWriter();
 
-        json.put("goods",goods);
+        json.put("goods", goods);
         writer.print(json);
         writer.flush();
         writer.close();
     }
-
 
     public void deleteGoodsById(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException, IOException, ServletException {
         String goods_id = request.getParameter("goods_id");

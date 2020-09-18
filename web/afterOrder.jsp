@@ -8,6 +8,32 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <script type="text/javascript" src="jquery-3.3.1.js"></script>
+    <script type="text/javascript">
+        function pay(e) {
+            var re = $(e);
+            $.ajax({
+                url: "UpdateOrderServlet?method=pay",
+                data: {
+                    "orderId": re.attr("orderId"),
+                    "orderStatus": re.attr("orderStatus")
+                },
+                type: "post",
+                dataType: "json",
+                success: function (result) {
+
+                    //var msg = eval(result.msg);
+                    alert(result.msg);
+                    location.href = "OrderServlet?method=queryCurrentOrders";
+
+                },
+                error: function (result) {
+                    alert("支付失败了！");
+
+                }
+            });
+        }
+    </script>
     <title>Title</title>
     <style type="text/css">
         table {
@@ -41,40 +67,41 @@
 <h2>订单信息：</h2><br>
 <table>
     <tr>
-        <th id="">订单编号</th>
-        <th id=""><%=orderInfo.getOrder_id()%></th>
+        <th>订单编号</th>
+        <th><%=orderInfo.getOrder_id()%></th>
     </tr>
     <tr>
-        <th id="">用户名</th>
-        <th id=""><%=username%></th>
+        <th>用户名</th>
+        <th><%=username%></th>
     </tr>
     <tr>
-        <th id="">商品单价</th>
-        <th id=""><%=orderInfo.getOrder_goodsprice()%></th>
+        <th>商品单价</th>
+        <th><%=orderInfo.getOrder_goodsprice()%></th>
     </tr>
     <tr>
-        <th id="">订单总价</th>
-        <th id=""><%=orderInfo.getOrder_price()%></th>
+        <th>订单总价</th>
+        <th><%=orderInfo.getOrder_price()%></th>
     </tr>
     <tr>
-        <th id="">订单状态</th>
-        <th id="">未支付</th>
+        <th>订单状态</th>
+        <th>未支付</th>
     </tr>
     <tr>
-        <th id="">订单时间</th>
-        <th id=""><%=orderInfo.getOrder_time()%></th>
+        <th>订单时间</th>
+        <th><%=orderInfo.getOrder_time()%></th>
     </tr>
     <tr>
-        <th id="">收件人地址</th>
-        <th id=""><%=address_detail%></th>
+        <th>收件人地址</th>
+        <th><%=address_detail%></th>
     </tr>
     <tr>
-        <th id="">收件人电话</th>
-        <th id=""><%=address_userphone%></th>
+        <th>收件人电话</th>
+        <th><%=address_userphone%></th>
     </tr>
 
 </table>
 
-<h3><a href="">点我支付！！！！</a></h3>
+<h3><button><a onclick="pay(this)" orderId="<%=orderInfo.getOrder_id()%>" orderStatus="<%=orderInfo.getOrder_status()%>">点我支付！！！！</a></button></h3>
+<button><a href="GoodsServlet?method=qureyAllGoods">暂不支付，回到首页</a></button>
 </body>
 </html>

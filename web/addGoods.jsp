@@ -10,17 +10,16 @@
 <head>
     <title>添加商品</title>
     <style type="text/css">
-        form {
-            width: 800px;
-            border: 0px solid black;
-            height: 1000px;
-        }
 
-        tr1 {
+        table{
+            width: 800px;
+            border: 1px solid black;
+            height: 50px;
+        }
+        #tr1{
             border-bottom: 1px solid black;
         }
-
-        th {
+        th{
             width: 80px;
             border: 1px solid black;
         }
@@ -29,13 +28,32 @@
 <body>
 
 <form action="GoodsServlet?method=addGoods" method="post">
-    商品名称:<input type="text"  name="goods_name"><br/>
-    商品日期:<input type="text"  name="goods_date"><br/>
-    商品图片:<input type="text" name="goods_picture"><br/>
-    商品价格:<input type="text"  name="goods_price"><br/>
-    商品信息:<input type="text" name="goods_info"><br/>
-    商品类型:<input type="text" name="goods_typeid"><br/>
-    <input type="submit" value="添加">
+    <table>
+        <tr>
+            <th>商品id :</th>
+            <th>商品名称</th>
+            <th>商品日期</th>
+            <th>商品图片</th>
+            <th>商品价格</th>
+            <th>商品评分</th>
+            <th>商品信息</th>
+            <th>商品类型</th>
+            <th>提交</th>
+        </tr>
+        <tr>
+            <th><input type="text"  name="goods_id" placeholder="请输入商品id"></th>
+            <th><input type="text" name="goods_name" placeholder="请输入商品名称"></th>
+            <th><input type="text"  name="goods_date" placeholder="请输入商品日期"></th>
+            <th><input type="text"  name="goods_picture" placeholder="请输入商品图片"></th>
+            <th><input type="text" name="goods_price" placeholder="请输入商品价格"></th>
+            <th><input type="text" name="goods_star" placeholder="请输入商品评分"></th>
+            <th><input type="text"  name="goods_info" placeholder="请输入商品信息"></th>
+            <th><input type="text"  name="goods_typeid" placeholder="请输入商品类型"></th>
+            <th>
+                <input type="submit" value="提交">
+            </th>
+        </tr>
+    </table>
 </form>
 </body>
 </html>

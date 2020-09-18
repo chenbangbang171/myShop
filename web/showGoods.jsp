@@ -74,6 +74,8 @@
     <%
         }
     %>
+
 </table>
+<button><a href="manage.jsp">返回首页</a></button>
 </body>
 </html>

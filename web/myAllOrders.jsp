@@ -35,7 +35,6 @@
                 }
             });
         }
-
         function confirm(e) {
             var re = $(e);
             $.ajax({
@@ -56,13 +55,11 @@
                 }
             });
         }
-
-
     </script>
     <title>我的当前订单</title>
     <style type="text/css">
         table {
-            width: 1000px;
+            width: 800px;
             border: 1px solid black;
             height: 50px;
         }
@@ -79,8 +76,7 @@
         #back {
             float: left;
         }
-
-        a {
+        a{
             text-decoration: none;
         }
     </style>
@@ -102,11 +98,10 @@
         <th>订单时间</th>
         <th>收件人地址</th>
         <th>收件人电话</th>
-        <th>操作</th>
     </tr>
 
     <%
-        List<OrderDetail> orderList = (List<OrderDetail>) request.getAttribute("currentOrders");
+        List<OrderDetail> orderList = (List<OrderDetail>) request.getAttribute("orderDetails");
         String status = "";
         for (OrderDetail order : orderList) {
             //订单状态：0未支付、1支付成功，等待发货、2已发货，运输中、3已到达，等待领取、4待确认收货、5待评价
@@ -122,6 +117,9 @@
                 status = "已领取，待确认收货";
             } else if (order.getOrder_status() == 5) {
                 status = "待评价";
+            }else {
+                status = "交易完成";
+
             }
 
     %>
@@ -150,38 +148,9 @@
         <th>
             <%=order.getOrder_phoneNumber()%>
         </th>
-        <%
-            if (order.getOrder_status() == 0) {
-        %>
-        <th>
-            <button><a onclick="pay(this)" orderId="<%=order.getOrder_id()%>"
-                       orderStatus="<%=order.getOrder_status()%>">点我支付</a></button>
-        </th>
-        <%
-        } else if (order.getOrder_status() == 4) {
-        %>
-        <th>
-            <button>
-                <a onclick="confirm(this)" orderId="<%=order.getOrder_id()%>"orderStatus="<%=order.getOrder_status()%>">点我确认收货</a>
-            </button>
-        </th>
-        <%
-        } else if (order.getOrder_status() == 5) {
-        %>
-        <th>
-            <button><a href="UpdateOrderServlet?method=appraise&orderId=<%=order.getOrder_id()%>">点我评价</a></button>
-        </th>
-        <%
-        } else {
-        %>
-        <th>
-            请耐心等待，您的货物已经在路上了！！
-        </th>
-        <%
-            }
-        %>
     </tr>
     <%
+
         }
     %>
 </table>

@@ -24,7 +24,6 @@
                 type: "post",
                 dataType: "json",
                 success: function (result) {
-
                     var order = eval(result.order);
                     alert("下单成功！点击确定查看订单详情");
                     location.href = "OrderServlet?method=orderDetail&orderId="+order.order_id;
@@ -110,6 +109,12 @@
             <button>
                 <a onclick="createOrder(this)" goodsId="<%=cart.getGoodsId()%>" goodsPrice="<%=cart.getGoodsPrice()%>" goodsNumber="<%=cart.getGoodsNumber()%>" totalPrice="<%=cart.getTotalPrice()%>">点击下单</a>
             </button>
+<%--            <button>--%>
+<%--                <a href="OrderServlet?method=createNewOrder&goodsId="<%=cart.getGoodsId()%>>点击下单</a>--%>
+<%--            </button>--%>
+<%--            <button>--%>
+<%--                <a href="createOrder.jsp?goodsId=<%=cart.getGoodsId()%>&goodsNumber= <%=cart.getGoodsNumber()%>">点击下单</a>--%>
+<%--            </button>--%>
         </th>
     </tr>
 

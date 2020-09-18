@@ -34,6 +34,11 @@ public class UserDaoImpl extends BaseDao implements UserDao {
         return super.queryBean(sql, User.class, id);
     }
 
+    public User queryUsertByName(String name) throws SQLException {
+        String sql = "select  * from user where username = ?";
+        return super.queryBean(sql, User.class, name);
+    }
+
     @Override
     public User queryUsertByNameAndPwd(String name, String pwd) throws SQLException {
         String sql = "select  * from user where username = ? and password = ? ";
@@ -98,9 +103,10 @@ public class UserDaoImpl extends BaseDao implements UserDao {
      * @throws SQLException
      */
     @Override
-    public User getRole(int id) throws SQLException {
-        String sql = "select role from user where id = ? and role = 1" ;
-        return queryBean(sql,User.class,id);
+    public User getRole(int id,int role) throws SQLException {
+        String sql = "select role from user where id = ? and role = ? "  ;
+        Object[] params = {id,role};
+        return queryBean(sql,User.class,params);
     }
 
 

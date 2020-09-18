@@ -15,6 +15,7 @@ public interface UserDao {
 
     /**
      * 根据传入的id删除用户
+     *
      * @param id user类对象的id属性
      * @return 影响的行数
      */
@@ -40,12 +41,14 @@ public interface UserDao {
 
     /**
      * 查询到的所有用户list集合
+     *
      * @return
      */
     List<User> queryAllUsers() throws SQLException, ClassNotFoundException;
 
     /**
      * 根据用户名和密码查询用户是否存在，用于登录验证
+     *
      * @return
      */
     User queryUsertByNameAndPwd(String name, String pwd) throws SQLException, ClassNotFoundException;
@@ -86,6 +89,6 @@ public interface UserDao {
      * @return
      * @throws SQLException
      */
-    public User getRole(int id) throws SQLException;
+    public User getRole(int id, int role) throws SQLException;
 
 }

@@ -10,20 +10,27 @@
 <head>
     <title>修改商品信息</title>
     <style type="text/css">
-
-        form {
-            width: 800px;
-            border: 0px solid black;
-            height: 1000px;
+        table {
+            width: 1100px;
+            border: 1px solid black;
+            height: 50px;
         }
 
-        tr1 {
+        #tr1 {
             border-bottom: 1px solid black;
         }
 
         th {
             width: 80px;
             border: 1px solid black;
+        }
+
+        #back {
+            float: left;
+        }
+
+        a {
+            text-decoration: none;
         }
     </style>
 </head>
@@ -33,16 +40,32 @@
     Goods goods = (Goods) request.getAttribute("goodsInfo");
 
 %>
+
 <form action="GoodsServlet?method=updateGoodsById" method="post">
-    商品id :<input type="text" value="<%=goods.getGoods_id() %>" readonly="readonly" name="goods_id"><br/>
-    商品名称:<input type="text" value="<%=goods.getGoods_name() %>" name="goods_name"><br/>
-    商品日期:<input type="text" value="<%=goods.getGoods_date() %>" name="goods_date"><br/>
-    商品图片:<input type="text" value="<%=goods.getGoods_picture()%>" name="goods_picture"><br/>
-    商品价格:<input type="text" value="<%=goods.getGoods_price() %>" name="goods_price"><br/>
-    商品评分:<input type="text" value="<%=goods.getGoods_star()%>" name="goods_star"><br/>
-    商品信息:<input type="text" value="<%=goods.getGoods_info() %>" name="goods_info"><br/>
-    商品类型:<input type="text" value="<%=goods.getGoods_typeid() %>" name="goods_typeid"><br/>
-    <input type="submit" value="修改">
+    <table>
+        <tr>
+            <th>商品id :</th>
+            <th>商品名称</th>
+            <th>商品日期</th>
+            <th>商品图片</th>
+            <th>商品价格</th>
+            <th>商品评分</th>
+            <th>商品信息</th>
+            <th>商品类型</th>
+            <th>提交</th>
+        </tr>
+        <tr>
+            <th><input type="text" value="<%=goods.getGoods_id() %>" readonly="readonly" name="goods_id"></th>
+            <th><input type="text" value="<%=goods.getGoods_name() %>" name="goods_name"></th>
+            <th><input type="text" value="<%=goods.getGoods_date() %>" name="goods_date"></th>
+            <th><input type="text" value="<%=goods.getGoods_picture()%>" name="goods_picture"></th>
+            <th><input type="text" value="<%=goods.getGoods_price() %>" name="goods_price"></th>
+            <th><input type="text" value="<%=goods.getGoods_star()%>" name="goods_star"></th>
+            <th><input type="text" value="<%=goods.getGoods_info() %>" name="goods_info"></th>
+            <th><input type="text" value="<%=goods.getGoods_typeid() %>" name="goods_typeid"></th>
+            <th><input type="submit" value="修改"></th>
+        </tr>
+    </table>
 </form>
 </body>
 </html>

@@ -1,15 +1,10 @@
 package com.czj.myShop.servlet;
 
-import com.czj.myShop.dao.AddressDaoImpl;
-import com.czj.myShop.dao.OrderDaoImpl;
-import com.czj.myShop.dao.OrderDetailDaoImpl;
-import com.czj.myShop.dao.UserDaoImpl;
-import com.czj.myShop.entity.Address;
-import com.czj.myShop.entity.Order;
-import com.czj.myShop.entity.OrderDetail;
-import com.czj.myShop.entity.User;
+import com.czj.myShop.dao.*;
+import com.czj.myShop.entity.*;
 import net.sf.json.JSON;
 import net.sf.json.JSONObject;
+import org.apache.commons.beanutils.BeanUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,17 +13,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @WebServlet("/OrderServlet")
 public class OrderServlet extends BaseServlet {
     private OrderDaoImpl orderDaoImpl = new OrderDaoImpl();
-    private UserDaoImpl userDaoImpl = new UserDaoImpl();
     private AddressDaoImpl addressDaoImpl = new AddressDaoImpl();
     private OrderDetailDaoImpl orderDetailDaoImpl = new OrderDetailDaoImpl();
 
@@ -44,11 +36,15 @@ public class OrderServlet extends BaseServlet {
     public void createOrder(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
         Random random = new Random();
         int i = random.nextInt(10000);
-        String orderId = String.valueOf(i) + String.valueOf(System.currentTimeMillis());
+        int i2 = random.nextInt(10000);
+        int i3 = random.nextInt(10000);
+        int i4 = random.nextInt(10000);
+
+        String orderId = String.valueOf(i) + String.valueOf(i2)+String.valueOf(i3)+String.valueOf(i4);
 
         int userid = (int) request.getSession().getAttribute("userid");
         int goodsid = Integer.parseInt(request.getParameter("goodsId"));
-        String order_userName = (String)request.getSession().getAttribute("username");
+        String order_userName = (String) request.getSession().getAttribute("username");
         int goodsNumber = Integer.parseInt(request.getParameter("goodsNumber"));
         double goodsPrice = Double.parseDouble(request.getParameter("goodsPrice"));
         double totalPrice = Double.parseDouble(request.getParameter("totalPrice"));
@@ -68,7 +64,7 @@ public class OrderServlet extends BaseServlet {
         Order order = new Order(orderId, userid, goodsid, totalPrice, goodsPrice, status, date, address_id);
 
         //组装orderDetail
-        OrderDetail orderDetail = new OrderDetail(orderId,userid,order_userName,goodsPrice,totalPrice,status,date,address_detail,address_userphone);
+        OrderDetail orderDetail = new OrderDetail(orderId, userid, order_userName, goodsPrice, totalPrice, status, date, address_detail, address_userphone);
         orderDetailDaoImpl.insertOrderDeatil(orderDetail);
 
         //插入数据库
@@ -107,6 +103,7 @@ public class OrderServlet extends BaseServlet {
 
     /**
      * 查询当前订单，不包括历史订单
+     *
      * @param request
      * @param response
      * @throws SQLException
@@ -115,13 +112,48 @@ public class OrderServlet extends BaseServlet {
      */
     public void queryCurrentOrders(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         int userId = (int) request.getSession().getAttribute("userid");
+        List<OrderDetail> orderDetails = orderDetailDaoImpl.queryAllOrderDetails(userId);
+        List<OrderDetail> currentOrders = new ArrayList<>();
+        for (OrderDetail orderDetail: orderDetails) {
+            if (orderDetail.getOrder_status() != 6){
+              currentOrders.add(orderDetail);
+            }
+        }
+        request.setAttribute("currentOrders", currentOrders);
+        request.getRequestDispatcher("myCurrentOrders.jsp").forward(request, response);
+    }
+
+    public void queryAllOrders(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+        int userId = (int) request.getSession().getAttribute("userid");
 
         List<OrderDetail> orderDetails = orderDetailDaoImpl.queryAllOrderDetails(userId);
 
-        request.setAttribute("orderDetails",orderDetails);
-        request.getRequestDispatcher("myCurrentOrders.jsp").forward(request,response);
+        request.setAttribute("orderDetails", orderDetails);
+        request.getRequestDispatcher("myAllOrders.jsp").forward(request, response);
     }
 
+    public void queryAllOrdersForManager(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+        List<OrderDetail> orderDetails = orderDetailDaoImpl.queryAllOrdersForManager();
+        request.setAttribute("allOrders",orderDetails);
+        request.getRequestDispatcher("showOrders.jsp").forward(request,response);
+    }
+
+    public void queryOrderById(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+        String orderId = request.getParameter("orderId");
+        OrderDetail orderDetail = orderDetailDaoImpl.queryOrderById(orderId);
+        request.setAttribute("orderDetail",orderDetail);
+        request.getRequestDispatcher("updateOrder.jsp").forward(request,response);
+    }
+
+    public void updateOrderById(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException, InvocationTargetException, IllegalAccessException {
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        OrderDetail orderDetail = new OrderDetail();
+        BeanUtils.populate(orderDetail, parameterMap);
+
+        orderDetailDaoImpl.updateOrderById(orderDetail);
+
+        response.sendRedirect("OrderServlet?method=queryAllOrdersForManager");
+    }
 
 
 }

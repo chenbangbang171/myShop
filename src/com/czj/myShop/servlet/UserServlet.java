@@ -6,6 +6,7 @@ import com.czj.myShop.utils.GenerateLinkUtils;
 import com.czj.myShop.utils.SendJMailNew;
 import org.apache.commons.beanutils.BeanUtils;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -142,18 +143,20 @@ public class UserServlet extends BaseServlet {
         return userDaoImpl.queryUserByEmail(email);
     }
 
-    public void deleteUser(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
-        int id = Integer.parseInt(request.getParameter("id"));
+    public void deleteUserById(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
+        int id = Integer.parseInt(request.getParameter("userId"));
 
         userDaoImpl.deleteUserById(id);
 
         response.sendRedirect("UserServlet?method=queryAllUsers");
     }
 
-    public void queryUserById(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
-        int id = Integer.parseInt(request.getParameter("id"));
+    public void queryUserById(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException, ServletException {
+        int id = Integer.parseInt(request.getParameter("userId"));
 
-        userDaoImpl.queryUsertById(id);
+        User user = userDaoImpl.queryUsertById(id);
+        request.setAttribute("user",user);
+        request.getRequestDispatcher("updateUser.jsp").forward(request,response);
     }
 
     public void queryUserByEmail(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
@@ -186,23 +189,21 @@ public class UserServlet extends BaseServlet {
         String password = request.getParameter("password");
 
         User user = userDaoImpl.queryUsertByNameAndPwd(username, password);
+
+        request.getSession().setAttribute("userid", user.getId());
+        request.getSession().setAttribute("username", user.getUsername());
+        request.getSession().setAttribute("password", user.getPassword());
+        response.addCookie(new Cookie("username", username));
+        response.addCookie(new Cookie("password", password));
+        request.getSession().setMaxInactiveInterval(60 * 30);
+
         if (user != null) {
             if (isActive(user.getId())) {
-
                 if (getRole(user.getId())) {
-                    request.getSession().setAttribute("userid", user.getId());
-                    request.getSession().setAttribute("username", user.getUsername());
-                    request.getSession().setAttribute("password", user.getPassword());
-                    request.getSession().setAttribute("role", user.getRole());
-                    response.addCookie(new Cookie("username", username));
-                    response.addCookie(new Cookie("password", password));
-                    request.getSession().setMaxInactiveInterval(60 * 30);
-
-                    response.sendRedirect("main.jsp");
+                    response.sendRedirect("GoodsServlet?method=qureyAllGoods");
                 }else{
                     response.sendRedirect("manage.jsp");
                 }
-
             } else {
                 response.getWriter().write("此账号未激活，请激活后登录！");
             }
@@ -223,7 +224,7 @@ public class UserServlet extends BaseServlet {
      */
     public boolean getRole(int id) throws IOException, SQLException {
         //true代表会员，false代表管理员
-        return userDaoImpl.getRole(id) != null ? true : false;
+        return userDaoImpl.getRole(id,1) != null ? true : false;
     }
 
     /**
@@ -241,7 +242,6 @@ public class UserServlet extends BaseServlet {
     public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
         request.getSession().invalidate();
         response.sendRedirect("index.jsp");
-
     }
 
     public void checkPassword(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
@@ -280,26 +280,39 @@ public class UserServlet extends BaseServlet {
         writer.close();
     }
 
-    public void updateyUser(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
+    public void updateUser(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException, InvocationTargetException, IllegalAccessException {
 
         Map<String, String[]> parameterMap = request.getParameterMap();
 
         User user = new User();
-        try {
-            BeanUtils.populate(user, parameterMap);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        BeanUtils.populate(user, parameterMap);
 
         userDaoImpl.updateUser(user);
 
-        // response.sendRedirect("UserServlet?method=queryAllUsers");
+        response.sendRedirect("UserServlet?method=queryAllUsers");
 
     }
 
-    public void queryAllUsers(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
+    public void queryAllUsers(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException, ServletException {
         List<User> list = userDaoImpl.queryAllUsers();
 
-        response.sendRedirect("showUsers.jsp");
+        request.setAttribute("allUsers",list);
+        request.getRequestDispatcher("showUsers.jsp").forward(request,response);
+    }
+
+    public void checkUserName(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+        String userName = request.getParameter("userName");
+
+        String result = "";
+
+        User user = userDaoImpl.queryUsertByName(userName);
+        if (user != null){
+            result = "该用户名已存在！";
+        }
+
+        PrintWriter writer = response.getWriter();
+        writer.print(result);
+        writer.flush();
+        writer.close();
     }
 }

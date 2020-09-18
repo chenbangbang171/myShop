@@ -12,9 +12,18 @@
 </head>
 <body>
 <%
-    String username = (String)session.getAttribute("username");
+    String username = (String) session.getAttribute("username");
+    if (null == username) {
+%>
+<a href="regist.jsp">点我注册哦亲！~</a>
+<%
+} else {
 %>
 <%= username%>,要买小米儿不？
+<%
+    }
+%>
+
 
 <a href="GoodsServlet?method=qureyAllGoods">商品</a>
 

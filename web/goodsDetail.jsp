@@ -13,9 +13,29 @@
 <head>
     <title>Title</title>
     <script type="text/javascript" src="jquery-3.3.1.js"></script>
+    <style type="text/css">
+        a{
+            text-decoration: none;
+        }
+        a:visited {
+            text-decoration: none;
+        }
 
+    </style>
 </head>
 <body>
+<%
+    String username = (String) session.getAttribute("username");
+    if (null == username) {
+%>
+<a href="regist.jsp">点我注册哦亲！~</a>
+<%
+} else {
+%>
+<%=username%>宝贝您来啦？！！
+<%
+    }
+%>
 <script type="text/javascript">
     $(document).ready(function () {
         $("#add").on("click", function () {
@@ -40,7 +60,7 @@
     <img src="<%=goods.getGoods_picture()%>" width="500px" height="500px">
     <h1><%=goods.getGoods_name()%>你值得拥有！</h1>
     <h1>惊爆价只要<%=goods.getGoods_price()%>元！！！只要<%=goods.getGoods_price()%>元！！！！</h1>
-    <div style="font-size: 30px">点击右侧按钮加入购物车！！！</div>
+    <div style="font-size: 30px">点击下方按钮加入购物车！！！</div>
     <input type="text" id="goodsNumber" oninput="value=value.replace(/[^\d]/g,'')">
     <input type="button" id="add" value="添加到购物车">
     <button><a href="GoodsServlet?method=qureyAllGoods">返回首页</a></button>

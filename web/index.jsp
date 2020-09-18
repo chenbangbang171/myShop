@@ -31,10 +31,6 @@
 
         }
 
-
-
-
-
         #input { /* 登录输入框-外*/
             margin-top: 30px;
             margin-left: 70px;
